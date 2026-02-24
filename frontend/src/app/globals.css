@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-card: #16161f;
+    --bg-card-hover: #1e1e2a;
+    --border: #2a2a3a;
+    --text-primary: #f0f0ff;
+    --text-secondary: #8888aa;
+    --accent: #7c6ff1;
+    --accent-glow: rgba(124, 111, 241, 0.3);
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+}
+
+@layer components {
+  .glass-card {
+    @apply rounded-2xl border backdrop-blur-sm;
+    background: rgba(22, 22, 31, 0.8);
+    border-color: var(--border);
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200;
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+    box-shadow: 0 0 20px var(--accent-glow);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 border;
+    border-color: var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+  }
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+  .input-field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  .input-field::placeholder { color: var(--text-secondary); }
+
+  .stat-card {
+    @apply glass-card p-6 transition-all duration-300 cursor-default;
+  }
+  .stat-card:hover {
+    background: rgba(30, 30, 42, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+
+  .badge-success {
+    @apply text-xs px-2.5 py-1 rounded-full font-medium;
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--success);
+  }
+  .badge-warning {
+    @apply text-xs px-2.5 py-1 rounded-full font-medium;
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning);
+  }
+  .badge-danger {
+    @apply text-xs px-2.5 py-1 rounded-full font-medium;
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+  }
+  .badge-purple {
+    @apply text-xs px-2.5 py-1 rounded-full font-medium;
+    background: rgba(124, 111, 241, 0.15);
+    color: var(--accent);
+  }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all duration-200 cursor-pointer font-medium;
+    color: var(--text-secondary);
+  }
+  .sidebar-item:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+  }
+  .sidebar-item.active {
+    background: rgba(124, 111, 241, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(124, 111, 241, 0.2);
+  }
+
+  .table-row {
+    @apply border-b transition-colors duration-150;
+    border-color: var(--border);
+  }
+  .table-row:hover {
+    background: var(--bg-card-hover);
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
+.live-dot { animation: pulse-dot 1.5s ease-in-out infinite; }

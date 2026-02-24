@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: nexus-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: nexusroot
+      MYSQL_DATABASE: nexusdb
+      MYSQL_USER: nexus
+      MYSQL_PASSWORD: nexus123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "nexus", "-pnexus123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexus-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: nexus-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexus-net
+
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nexus-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/nexusdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: nexus
+      SPRING_DATASOURCE_PASSWORD: nexus123
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      JWT_SECRET: nexushub-super-secret-jwt-key-2024-must-be-32-chars-minimum
+      JWT_EXPIRATION: 86400000
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - nexus-net
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  nexus-net:
+    driver: bridge
